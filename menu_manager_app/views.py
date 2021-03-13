@@ -9,6 +9,9 @@ from .serializers import MenuSerializer, DishSerializer
 
 
 class MenuView(ModelViewSet, generics.ListAPIView):
+    """
+    Retrieve, update or delete dish.
+    """
     permission_classes = [IsAuthenticated]
     queryset = Menu.objects.all().prefetch_related("dishes")
     serializer_class = MenuSerializer
@@ -17,6 +20,9 @@ class MenuView(ModelViewSet, generics.ListAPIView):
 
     @action(detail=False, permission_classes=[AllowAny])
     def get_not_empty(self, request):
+        """
+        Return carts with dishes.
+        """
         carts = Menu.objects.exclude(dishes__isnull=True)
         carts_serializer = MenuSerializer(carts, many=True)
         return Response(carts_serializer.data)
@@ -31,6 +37,9 @@ class MenuView(ModelViewSet, generics.ListAPIView):
 
     @action(detail=False, permission_classes=[AllowAny])
     def recent_carts(self, request):
+        """
+        Get recent added carts.
+        """
         recent_carts = Menu.objects.all().order_by("-created")
         page = self.paginate_queryset(recent_carts)
         if page is not None:
@@ -42,6 +51,9 @@ class MenuView(ModelViewSet, generics.ListAPIView):
 
     @action(detail=False, permission_classes=[AllowAny])
     def recent_updated_carts(self, request):
+        """
+        Get recent updated carts.
+        """
         recent_carts = Menu.objects.all().order_by("-updated")
         page = self.paginate_queryset(recent_carts)
         if page is not None:
