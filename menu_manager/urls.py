@@ -17,11 +17,17 @@ from django.contrib import admin
 from django.urls import path, include
 from menu_manager_app.views import MenuView, DishView, MenuDetailsView, DishDetailsView
 from rest_framework.routers import DefaultRouter
+from django.conf.urls import url
+from rest_framework_swagger.views import get_swagger_view
 
 router = DefaultRouter()
 router.register(r'carts', MenuView, basename='carts')
 
+
+schema_view = get_swagger_view(title='eMenu API')
+
 urlpatterns = [
+    url(r'^$', schema_view),
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
     path('dishes/', DishView.as_view()),
